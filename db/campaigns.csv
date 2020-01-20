@@ -1,0 +1,4 @@
+﻿id,job_id,external_reference,status,ad_description
+1,100,1,enabled,Description for campaign 11
+2,101,2,disabled,Description for campaign 12
+3,102,3,disabled,Description for campaign 14

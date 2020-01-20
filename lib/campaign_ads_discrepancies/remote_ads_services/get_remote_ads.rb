@@ -17,13 +17,19 @@ module CampaignAdsDiscrepancies
       def call
         response = Net::HTTP.get(remote_url)
         ads = JSON.parse(response)['ads']
-        ads.map do |ad|
-          RemoteAd.new(
-            reference: ad['reference'],
-            status: ad['status'],
-            description: ad['description']
-          )
-        end
+        ads.map { |ad| new_remote_ad(ad) }
+      rescue SocketError
+        nil
+      end
+
+      private
+
+      def new_remote_ad(ad_params)
+        RemoteAd.new(
+          reference: ad_params['reference'],
+          status: ad_params['status'],
+          description: ad_params['description']
+        )
       end
     end
   end
