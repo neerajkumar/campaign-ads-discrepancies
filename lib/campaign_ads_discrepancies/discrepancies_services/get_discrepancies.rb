@@ -5,7 +5,7 @@ module CampaignAdsDiscrepancies
     class GetDiscrepancies < BaseService
       attr_reader :local_campaigns, :remote_campaigns
 
-      COMPARED_ATTRIBUTES = %w(status description).freeze
+      COMPARED_ATTRIBUTES = %w[status description].freeze
 
       STATUS_MAPPING = {
         active: 'enabled',

@@ -5,6 +5,7 @@ $LOAD_PATH.unshift(lib) unless $LOAD_PATH.include?(lib)
 
 require 'bundler/setup'
 require 'campaign_ads_discrepancies'
+require 'tempfile'
 
 RSpec.configure do |config|
   # Enable flags like --only-failures and --next-failure
