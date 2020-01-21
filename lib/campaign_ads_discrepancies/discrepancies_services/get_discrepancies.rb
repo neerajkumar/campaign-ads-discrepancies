@@ -5,6 +5,8 @@ module CampaignAdsDiscrepancies
     class GetDiscrepancies < BaseService
       attr_reader :local_campaigns, :remote_campaigns
 
+      COMPARED_ATTRIBUTES = %w(status description).freeze
+
       STATUS_MAPPING = {
         active: 'enabled',
         paused: 'enabled',
@@ -19,13 +21,13 @@ module CampaignAdsDiscrepancies
       def call
         return [] if local_campaigns.empty? || remote_campaigns.empty?
 
-        local_campaigns.each_with_object([]) do |local_campaign, discrepancies|
+        local_campaigns.each_with_object([]) do |local_campaign, result|
           remote_campaign = remote_campaign(local_campaign)
           next unless remote_campaign
 
-          if discrepancy_found?(local_campaign, remote_campaign)
-            discrepancies << discrepancy(local_campaign, remote_campaign)
-          end
+          discrepancy = discrepancy(local_campaign, remote_campaign)
+
+          result << discrepancy if discrepancy
         end
       end
 
@@ -35,24 +37,42 @@ module CampaignAdsDiscrepancies
         remote_campaigns.detect { |campaign| campaign.reference.to_i == local_campaign.external_reference.to_i }
       end
 
-      def discrepancy_found?(local_campaign, remote_campaign)
-        local_campaign.ad_description != remote_campaign.description ||
-          STATUS_MAPPING[local_campaign.status.to_sym] != remote_campaign.status
-      end
-
       def discrepancy(local_campaign, remote_campaign)
+        return [] unless remote_campaign
+
+        discrepancies = discrepancies(local_campaign, remote_campaign)
+        return if discrepancies.empty?
+
         {
           remote_reference: remote_campaign.reference,
-          discrepancies: [
-            status: {
-              remote: remote_campaign.status,
-              local: local_campaign.status
-            },
-            description: {
-              remote: remote_campaign.description,
-              local: local_campaign.ad_description
-            }
-          ]
+          discrepancies: [discrepancies]
+        }
+      end
+
+      def discrepancies(local_campaign, remote_campaign)
+        COMPARED_ATTRIBUTES.each_with_object({}) do |attr, result|
+          discrepancy = send("#{attr}_discrepancy", local_campaign, remote_campaign)
+          next unless discrepancy
+
+          result[attr] = discrepancy
+        end
+      end
+
+      def status_discrepancy(local_campaign, remote_campaign)
+        return if STATUS_MAPPING[local_campaign.status.to_sym] == remote_campaign.status
+
+        {
+          remote: remote_campaign.status,
+          local: local_campaign.status
+        }
+      end
+
+      def description_discrepancy(local_campaign, remote_campaign)
+        return if local_campaign.ad_description == remote_campaign.description
+
+        {
+          remote: remote_campaign.description,
+          local: local_campaign.ad_description
         }
       end
     end

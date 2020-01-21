@@ -5,13 +5,13 @@ require 'json'
 
 module CampaignAdsDiscrepancies
   module RemoteAdsServices
-    class GetRemoteAds < CampaignAdsDiscrepancies::BaseService
+    class GetRemoteAds < BaseService
       REMOTE_ADS_URL = 'https://mockbin.org/bin/fcb30500-7b98-476f-810d-463a0b8fc3df'
 
       attr_reader :remote_url
 
       def initialize
-        @remote_url = URI(REMOTE_ADS_URL)
+        @remote_url = URI(ENV['REMOTE_URL'] || REMOTE_ADS_URL)
       end
 
       def call
