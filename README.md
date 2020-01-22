@@ -6,7 +6,7 @@
 
 Find discrepancies between campaigns (local ads) and remote ads.
 
-### Task background
+## Task background
 
 We publish our jobs to different marketing sources. To keep track of where the particular job is published, we create
 `Campaign` entity in database. `Campaigns` are periodically synchronized with 3rd party _Ad Service_.
@@ -44,27 +44,27 @@ So we need a way to detect discrepancies between local and remote state.
 ```
 [
   {
-    : remote_reference=>"2",
-    : discrepancies=>[
+    :remote_reference => "2",
+    :discrepancies => [
       {
-        "status"=>{
-          : remote=>"disabled",
-          : local=>"paused"
+        "status" => {
+          :remote => "disabled",
+          :local => "paused"
         }
       }
     ]
   },
   {
-    : remote_reference=>"3",
-    : discrepancies=>[
+    :remote_reference => "3",
+    :discrepancies => [
       {
-        "status"=>{
-          : remote=>"enabled",
-          : local=>"deleted"
+        "status" => {
+          :remote => "enabled",
+          :local => "deleted"
         },
-        "description"=>{
-          : remote=>"Description for campaign 13",
-          : local=>"Description for campaign 14"
+        "description" => {
+          :remote => "Description for campaign 13",
+          :local => "Description for campaign 14"
         }
       }
     ]
