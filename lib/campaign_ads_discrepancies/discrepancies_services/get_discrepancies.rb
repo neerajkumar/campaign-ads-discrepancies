@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 module CampaignAdsDiscrepancies
-  module CampaignsServices
+  module DiscrepanciesServices
     class GetDiscrepancies < BaseService
       attr_reader :local_campaigns, :remote_campaigns
 

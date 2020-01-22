@@ -1,12 +1,12 @@
 # frozen_string_literal: true
 
 module CampaignAdsDiscrepancies
-  module CampaignsServices
+  module DiscrepanciesServices
     class DiscrepanciesDetector < BaseService
       FILE_PATH = File.join(File.dirname(__FILE__), '../../../db/campaigns.csv')
 
       def call
-        CampaignAdsDiscrepancies::CampaignsServices::GetDiscrepancies.call(
+        GetDiscrepancies.call(
           local_campaigns: local_campaigns,
           remote_campaigns: remote_campaigns
         )
@@ -15,11 +15,11 @@ module CampaignAdsDiscrepancies
       private
 
       def local_campaigns
-        CampaignAdsDiscrepancies::CampaignsServices::GetCampaigns.call(FILE_PATH)
+        CampaignsServices::GetCampaigns.call(FILE_PATH)
       end
 
       def remote_campaigns
-        CampaignAdsDiscrepancies::RemoteAdsServices::GetRemoteAds.call
+        RemoteAdsServices::GetRemoteAds.call
       end
     end
   end

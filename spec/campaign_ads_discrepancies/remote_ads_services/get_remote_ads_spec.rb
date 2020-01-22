@@ -27,9 +27,8 @@ RSpec.describe CampaignAdsDiscrepancies::RemoteAdsServices::GetRemoteAds do
         ]
       }'
     end
-    before do
-      allow(Net::HTTP).to receive(:get).and_return(response)
-    end
+
+    before { allow(Net::HTTP).to receive(:get).and_return(response) }
 
     subject { described_class.call }
 
